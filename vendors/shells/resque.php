@@ -84,6 +84,7 @@ HELP
    */
   public function tail() {
     $log_path = $this->log_path;
+		//Open Log File
     if (file_exists($log_path)) {
       passthru('sudo tail -f '. escapeshellarg($this->log_path));
     }
@@ -104,14 +105,21 @@ HELP
     $this->tail();
   }
 
+	public function orEquals(&$a, $b, $c = null) {
+	  return is_null($c)? ($a = empty($a) ? $b : $a) : ($a = empty($b) ? $c : $b);
+	}
   /**
    * Fork a new php resque worker service.
    */
   public function start_only() {
-    $env = orEquals($this->params['env'], 'local');
-    $queue = orEquals($this->params['queue'], 'default');
+    $env = $this->orEquals($this->params['env'], 'local');
+    $queue = $this->orEquals($this->params['queue'], 'default');
     exec('id apache 2>&1 >/dev/null', $out, $status); // check if user exists; cross-platform for ubuntu & redhat
-    $user = orEquals($this->params['user'], $status===0? 'apache' : 'www-data');
+    $user = $this->orEquals($this->params['user'], $status===0? 'apache' : 'www-data');
+		//Support OSX
+		if(PHP_OS =="Darwin"){
+			$user = "_www";
+		}
 
     $path = App::pluginPath('Resque') .'vendors'. DS .'php-resque'. DS;
     $log_path = $this->log_path;
