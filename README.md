@@ -24,10 +24,10 @@ configure whatever Resque.Redis.host and port are appropriate for your environme
       'port' => 6379
     );
 
-Creat Log File w/ appropriate access writes 
-		@ app/tmp/logs   
-			touch php-resque-worker.log.html
-			chmod 777 php-resque-worker.log.html
+Creat Log File w/ appropriate access writes in app/tmp/logs:
+
+		touch php-resque-worker.log.html
+		chmod 777 php-resque-worker.log.html
 
 Then launch a new php-resque-worker fork, which will begin polling the master
 Resque server for new jobs to run locally:
