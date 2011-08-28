@@ -143,7 +143,7 @@ HELP
    */
   public function stop() {
     $this->out('Killing any/all existing PHP Resque worker services...');
-    passthru('ps aux | grep resque\\\\.php | awk \'{print$2}\' | sort -rn | xargs sudo kill -s 9');
+    passthru('ps aux | grep resque.php | awk \'{print$2}\' | sort -rn | xargs sudo kill -9');
   }
 
   /**
