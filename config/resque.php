@@ -1,6 +1,6 @@
 <?php
 
-switch (Configure::read('YourApp.environment')) {
+switch (Configure::read('Runtime.environment')) {
   default:
   case 'production':
     $config['Resque']['Redis'] = array(

@@ -94,6 +94,17 @@ class ResqueShell {
     return true;
   }
 
+	function enqueue($job_queue = 'default', $job_class, $params=null){
+		App::import('Component', 'Resque.Resque');
+    $paramstr = '';
+    foreach ($params as $key => &$value) {
+      $paramstr .= ($paramstr? ', ' : '') . $key .':'. $value;
+    }
+
+    Resque::enqueue($job_queue = 'default', $job_class, $params);
+    $this->out('Enqueued new job "'. $job_class .'"'. ($paramstr? ' with params ('. $paramstr .')' : '') .'...');
+	}
+
   /**
   * Loads a Component
    *
