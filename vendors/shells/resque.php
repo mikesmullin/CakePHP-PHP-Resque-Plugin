@@ -17,20 +17,7 @@ class ResqueShell extends Shell {
    * Provides end-user with helpful instructions.
    */
   public function help() {
-    if (count($this->args) == 1) {
-      // render output of Job::help()
-      App::import('Lib', 'Resque.ResqueUtility');
-      foreach (ResqueUtility::getJobs() as $job) {
-        if ($this->args[0] == Inflector::camelize(substr(basename($job), 0, -4))) {
-          include_once $job;
-          $Job = new $this->args[0]($x = null);
-          $this->out("\n". $Job->help() ."\n\n");
-          return;
-        }
-      }
-    }
-    else {
-      echo <<<HELP
+    echo <<<HELP
 try one of the following:
 
   cake resque jobs # list all known jobs
@@ -49,8 +36,7 @@ NOTE: need to be able to use passwordless sudo for:
 
 
 HELP
-      ;
-    }
+    ;
   }
 
   /**
@@ -101,7 +87,7 @@ HELP
 
     sleep(3); // give it time to output to the log for the first time
 
-    $this->tail();
+    //Don't tail, it prevents further operations. Like capistrano calls.$this->tail();
   }
 
   /**
@@ -112,7 +98,10 @@ HELP
     $queue = orEquals($this->params['queue'], 'default');
     exec('id apache 2>&1 >/dev/null', $out, $status); // check if user exists; cross-platform for ubuntu & redhat
     $user = orEquals($this->params['user'], $status===0? 'apache' : 'www-data');
-
+	//Override if OSX
+	if(PHP_OS=="Darwin"){
+		$user = "_www";
+	}
     $path = App::pluginPath('Resque') .'vendors'. DS .'php-resque'. DS;
     $log_path = $this->log_path;
     $bootstrap_path = App::pluginPath('Resque') .'libs'. DS .'resque_bootstrap.php';
